@@ -2,7 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/mysql:latest # The primary container where steps are run
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ROOT_USER: root
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: mysql
 
     steps:
       - checkout
@@ -12,4 +16,4 @@ jobs:
             mysql --version
             pwd
             ls -la
-            mysql -u root -p --execute="SELECT * FROM test_db.Persons"
+            mysql -u root -p'rootpw' --execute="SELECT * FROM test_db.Persons"
