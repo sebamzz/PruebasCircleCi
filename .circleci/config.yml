@@ -4,7 +4,6 @@ jobs:
     docker:
       - image: circleci/mysql:latest # The primary container where steps are run
         auth:
-        auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
 
