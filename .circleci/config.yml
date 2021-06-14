@@ -5,7 +5,7 @@ jobs:
       - image: circleci/mysql:latest # The primary container where steps are run
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+          password: 1234  # context / project UI env-var reference
 
     steps:
       - checkout
@@ -17,4 +17,4 @@ jobs:
             mysql --version
             pwd
             ls -la
-            mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM test_db.Persons"
+            mysql -u mydockerhub-user -p1234 --execute="SELECT * FROM test_db.Persons"
