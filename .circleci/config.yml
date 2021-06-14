@@ -16,4 +16,4 @@ jobs:
             mysql --version
             pwd
             ls -la
-            mysql -u root -p'rootpw' --execute="SELECT * FROM test_db.Persons"
+            mysql -u root -p'rootpw'
