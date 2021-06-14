@@ -2,8 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/mysql:8.0.4
-      # - image: circleci/mysql:latest # The primary container where steps are run
+      - image: circleci/mysql:latest # The primary container where steps are run
     environment:
       DB_HOST: 127.0.0.1
       command: [--default-authentication-plugin=mysql_native_password]
