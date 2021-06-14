@@ -15,12 +15,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Wait for Database Connection
-          # preinstalled in circleci/* docker image
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
-      #install mysql client
+        name: Wait for Database Connection
+        # preinstalled in circleci/* docker image
+        command: dockerize -wait tcp://localhost:3306 -timeout 1m
+        #install mysql client
       - run: sudo apt-get install mysql-client
-      # create databases
+  # create databases
       - run: mysql -h 127.0.0.1 -u root -e "create database carddb"
       - run: mysql -h 127.0.0.1 -u root -e "create database cardholderdb"
       - run: mysql -h 127.0.0.1 -u root -e "create database memberdb"
