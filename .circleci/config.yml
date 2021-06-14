@@ -1,25 +1,40 @@
 version: 2
 jobs:
-  test:
+  build:
     docker:
-      # Specify the version you desire here
-      - image: circleci/php:7.2-stretch
-
-      - image: circleci/mysql:8.0.20-ram
-        command: mysqld --default-authentication-plugin=mysql_native_password
-        environment:
-          MYSQL_USER: forge
-          MYSQL_DATABASE: forge
-          MYSQL_ROOT_PASSWORD: ''
-          MYSQL_PASSWORD: 'forge'
-
-    steps:
-      - checkout
-      - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
-          command: |
-            sudo docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd
-            sudo docker-php-ext-install zip bcmath pdo_mysql
-            mysql --version
-            pwd
-            ls -la
+      #specify system properties
+      environment:
+        DB_ROOT_USER: root
+        DB_URL: jdbc:mysql://localhost:3306/testdb
+        DB_DRIVER: com.mysql.cj.jdbc.Driver
+        DB_PASS: ""
+      # Specify our database service here
+      # CircleCI maintains a library of pre-built images
+    - image: circleci/mysql:5.7
+      environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        MYSQL_ROOT_PASSWORD: ''
+    working_directory: ~/
+      steps:
+    - checkout
+    - run:
+        name: Wait for Database Connection
+        # preinstalled in circleci/* docker image
+        command: dockerize -wait tcp://localhost:3306 -timeout 1m
+  #install mysql client
+    - run: sudo apt-get install mysql-client
+  # create databases
+    - run: mysql -h 127.0.0.1 -u root -e "create database carddb"
+    - run: mysql -h 127.0.0.1 -u root -e "create database cardholderdb"
+    - run: mysql -h 127.0.0.1 -u root -e "create database memberdb"
+    # Download and cache dependencies
+    - restore_cache:
+        keys:
+        -  v1-dependencies-{{ checksum "pom.xml" }}
+        # fallback to using the latest cache if no exact match is found
+        -  v1-dependencies-
+    - run: mvn dependency:go-offline
+    - save_cache:
+        paths:
+        - ~/
+        key: v1-dependencies-{{ checksum "pom.xml" }}
