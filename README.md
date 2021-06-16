@@ -1,1 +1,2 @@
-# PruebasCircleCi
+# phpunit-examples
+Examples with PHPUnit
